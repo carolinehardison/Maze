@@ -52,23 +52,25 @@ public class Maze {
 	    return spot;
     }
     
+    @Override
     public String toString(){
-	    String mazer = "";
-	    int rc = 0;
-	    int cc = 0;
-	    while (rc<numRow){
-	      cc = 0;
-	      while(cc<numCol){
-		      mazer += grid[rc][cc];
-		      if(cc != numCol -1){
-		        mazer += (" ");
-		      }else {
-		        mazer+= ("\n");
-		      }
-		      cc++;
-	      }
-	      rc++;
-	    }
-	    return mazer;
+        String mazer = "<html>";
+        int rc = 0;
+        int cc = 0;
+        while (rc<numRow){
+            cc = 0;
+            while(cc<numCol){
+                mazer += grid[rc][cc];
+                if(cc != numCol -1){
+                    mazer += (" ");
+                }else {
+                    mazer+= ("<br/>");
+                }
+                cc++;
+            }
+            rc++;
+        }
+        mazer+="</html>";
+        return mazer;
     }
 }
