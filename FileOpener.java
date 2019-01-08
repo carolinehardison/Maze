@@ -1,21 +1,22 @@
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileNotFoundException;
 /*
  * GUI Swing that opens text file
  */
 public class FileOpener {
     private static JFrame frame;
-    private static MazePanel panel;
     public static void main(String[] args){
         frame = new JFrame("Maze Runner");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        panel = new MazePanel();
+        MazePanel panel = new MazePanel();
         frame.getContentPane().add(panel);
         frame.setSize(panel.getSize());
         frame.pack();
@@ -29,9 +30,8 @@ public class FileOpener {
     public static class MazePanel extends JPanel {
         private GridBagConstraints c;
         private JButton open;
-        private JFileChooser chooser;
 
-        public MazePanel() {
+        MazePanel() {
 
             setLayout(new GridBagLayout());
             c = new GridBagConstraints();
@@ -55,66 +55,42 @@ public class FileOpener {
             c.gridx = 0;
             c.gridy = 0;
             add(instructions,c);
-            open.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (chooser == null) {
-                        chooser = new JFileChooser();
-                        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                        chooser.setAcceptAllFileFilterUsed(false);
-                        chooser.addChoosableFileFilter(new FileFilter() {
-                            @Override
-                            public boolean accept(File f) {
-                                return f.isDirectory() || f.getName().toLowerCase().endsWith(".txt");
-                            }
+            open.addActionListener(e -> {
+                        JFileChooser chooser = new JFileChooser();
+                        FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
+                        chooser.setFileFilter(filter);
+                        if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 
-                            @Override
-                            public String getDescription() {
-                                return "Text Files (*.txt)";
-                            }
-                        });
-                    }
-
-                    switch (chooser.showOpenDialog(MazePanel.this)) {
-                        case JFileChooser.APPROVE_OPTION:
-
-                            remove(open);
-                            remove(instructions);
                             try {
+                                remove(open);
+                                remove(instructions);
                                 JLabel guide = new JLabel("<html>0 = Wall<br/>1 = Unchecked Path<br/>2 = Path to Dead-End<br/>3 = Path to Finish<br/></html>");
-                                c.gridx=0;
-                                c.gridy=0;
-                                add(guide,c);
+                                c.gridx = 0;
+                                c.gridy = 0;
+                                add(guide, c);
                                 Maze maze = new Maze(chooser.getSelectedFile());
                                 MazeRunner mr = new MazeRunner(maze);
-
                                 JLabel unsolved = new JLabel(mr.getMaze().toString());
-                                c.gridx=0;
-                                c.gridy=1;
+                                c.gridx = 0;
+                                c.gridy = 1;
                                 add(unsolved, c);
 
                                 mr.traverse();
                                 String finished = mr.getMaze().toString();
                                 JLabel solved = new JLabel(finished);
-                                c.gridx=1;
-                                c.gridy=1;
-                                add(solved,c);
+                                c.gridx = 1;
+                                c.gridy = 1;
+                                add(solved, c);
 
                                 frame.setSize(getSize());
                                 frame.pack();
-
                             } catch (FileNotFoundException e1) {
-                                JLabel er = new JLabel("File not in correct format.");
-                                c.gridx = 0;
-                                c.gridy=0;
-                                add(er,c);
                                 e1.printStackTrace();
-
                             }
-                            break;
-                    }
-                }
-            });
+
+                        }
+
+                    });
         }
     }
 }
