@@ -6,15 +6,11 @@ public class MazeRunner {
 
     public MazeRunner(Maze maze){
 	    this.maze = maze;
-	    Deque<Position> runner = new LinkedList<Position>();
-      Deque<Position> temp = new LinkedList<Position>();
-	    this.runner = runner;
-	    this.temp = temp;
+	    runner = new LinkedList<Position>();
+	    temp = new LinkedList<Position>();
     }
    public boolean traverse(){
 		boolean done = false;
-		Deque<Position> runner = new LinkedList<Position>();
-		Deque<Position> temp = new LinkedList<Position>();
 		Position pos = new Position(0, 0);
 		runner.push(pos);
 		while(done != true ){
